@@ -3,12 +3,10 @@ const FORM_ID = "24972c799b4b";
 
 const horaSelect = document.getElementById("hora");
 const fechaInput = document.getElementById("fecha");
-const form = document.getElementById("formCita");
-const mensajeExito = document.getElementById("mensajeExito");
 
-// -------------------------------
-// GENERAR HORAS 10:00 AM A 7:00 PM
-// -------------------------------
+// --------------------------------------
+// GENERA HORAS DE 10 AM A 7 PM CADA 40 MIN
+// --------------------------------------
 function generarHoras() {
   const horas = [];
   let hora = 10;
@@ -26,31 +24,43 @@ function generarHoras() {
     }
   }
 
-  horaSelect.innerHTML = horas.map(h => `<option value="${h}">${h}</option>`).join("");
+  horaSelect.innerHTML = horas
+    .map(h => `<option value="${h}">${h}</option>`)
+    .join("");
 }
 
-// -------------------------------
-// CONSULTAR CITAS OCUPADAS DESDE BASIN
-// -------------------------------
+// -------------------------------------------------
+// CONSULTAR CITAS OCUPADAS DESDE BASIN (EN TIEMPO REAL)
+// -------------------------------------------------
 async function obtenerCitas(fecha) {
-  const res = await fetch(`https://usebasin.com/api/v1/submissions/${FORM_ID}`, {
-    headers: { "Authorization": `Bearer ${API_KEY}` }
-  });
+  try {
+    const res = await fetch(
+      `https://usebasin.com/api/v1/submissions/${FORM_ID}`,
+      {
+        headers: { Authorization: `Bearer ${API_KEY}` },
+      }
+    );
 
-  const data = await res.json();
+    const data = await res.json();
 
-  return data.submissions
-    .filter(s => s.data.fecha === fecha)
-    .map(s => s.data.hora);
+    return data.submissions
+      .filter(entry => entry.data.fecha === fecha)
+      .map(entry => entry.data.hora);
+
+  } catch (err) {
+    console.error("Error consultando Basin:", err);
+    return [];
+  }
 }
 
-// -------------------------------
-// BLOQUEAR HORAS YA OCUPADAS
-// -------------------------------
+// -------------------------------------------------
+// BLOQUEAR HORAS YA OCUPADAS PARA TODOS LOS USUARIOS
+// -------------------------------------------------
 async function actualizarHoras() {
-  generarHoras();
   const fecha = fechaInput.value;
   if (!fecha) return;
+
+  generarHoras();
 
   const ocupadas = await obtenerCitas(fecha);
 
@@ -58,19 +68,16 @@ async function actualizarHoras() {
     if (ocupadas.includes(option.value)) {
       option.disabled = true;
       option.textContent = `${option.value} (Ocupada)`;
+      option.style.color = "#ff6b6b";
     }
   }
 }
 
-// -------------------------------
-// MENSAJE DE ÉXITO
-// -------------------------------
-form.addEventListener("submit", () => {
-  mensajeExito.style.display = "block";
-  setTimeout(() => mensajeExito.style.display = "none", 6000);
-});
-
-// -------------------------------
+// -------- FECHA MÍNIMA --------
 fechaInput.min = new Date().toISOString().split("T")[0];
+
+// -------- EVENTO --------
 fechaInput.addEventListener("change", actualizarHoras);
+
+// -------- AL CARGAR LA PÁGINA --------
 generarHoras();
