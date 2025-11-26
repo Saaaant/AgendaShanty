@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendar Cita | Barbería</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #1c1c1c;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(255,255,255,0.1);
+      animation: fadeIn 0.7s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-weight: 600;
+      color: #e3b505;
+      letter-spacing: 1px;
+    }
+
+    label {
+      font-size: 15px;
+      margin-top: 15px;
+      font-weight: 400;
+      display: block;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+      background: #2b2b2b;
+      color: white;
+      outline: none;
+    }
+
+    select option:disabled {
+      background: #440000;
+      color: #ff8080;
+    }
+
+    button {
+      width: 100%;
+      background: #e3b505;
+      color: #111;
+      padding: 14px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 700;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #c99a04;
+    }
+
+    .exito {
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 10px;
+      background: #0f3;
+      color: #000;
+      font-weight: bold;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>Agendar Cita</h1>
+
+  <form id="formCita" action="https://usebasin.com/f/24972c799b4b" method="POST">
+    
+    <label>Nombre:</label>
+    <input type="text" name="nombre" required>
+
+    <label>Apellidos:</label>
+    <input type="text" name="apellidos" required>
+
+    <label>Número de Teléfono:</label>
+    <input type="tel" name="telefono" required>
+
+    <label>Fecha:</label>
+    <input type="date" id="fecha" name="fecha" required>
+
+    <label>Hora:</label>
+    <select id="hora" name="hora" required></select>
+
+    <button type="submit">Confirmar Cita</button>
+  </form>
+
+  <div class="exito" id="mensajeExito">
+    ✔ ¡Tu cita fue agendada con éxito!
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
